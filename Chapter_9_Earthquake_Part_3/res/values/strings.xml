@@ -16,5 +16,6 @@
   <string name="min_mag_key">MinMagKey</string>
   <string name="start_update_service_desc">Start Update</string>
   <string name="stop_update_service_desc">Stop Update</string>
-  
+  <string name="stop_auto_update_service_desc">Stop Auto Update</string>
+  <string name="start_auto_update_service_desc">Start Auto Update</string>
 </resources>

@@ -6,11 +6,11 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SimpleCursorAdapter;
-import android.content.CursorLoader;
 import android.content.Intent;
 
-public class EarthquakeSearchResultsFragment extends ListFragment implements LoaderCallbacks<Cursor> {
+public class EarthquakeSearchResultsFragment extends ListFragment implements  OnQueryTextListener,LoaderCallbacks<Cursor> {
 
 	private SimpleCursorAdapter mAdapter;
 	
@@ -28,6 +28,13 @@ public class EarthquakeSearchResultsFragment extends ListFragment implements Loa
 		parseIntent(getActivity().getIntent());
 	}
 	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setEmptyText("What's up");
+		
+		
+	}
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -64,5 +71,18 @@ public class EarthquakeSearchResultsFragment extends ListFragment implements Loa
 	      getLoaderManager().restartLoader(0, args, this);
 	    }
 	  }
+  
+  	// implements of OnQueryTextListener
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

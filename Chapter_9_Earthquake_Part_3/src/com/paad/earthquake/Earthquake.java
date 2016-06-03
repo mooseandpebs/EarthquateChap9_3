@@ -118,13 +118,29 @@ public class Earthquake extends Activity {
   {
 	  try
 	  {
-		  if (Intent.ACTION_SEARCH.equals(intent.getAction())){
-			  String query = intent.getStringExtra(SearchManager.QUERY);
-			  // display results in adapter
-		  }
+		  parseIntent(intent);
 	  }catch(Exception e)
 	  {
 		  Log.e(TAG, "handleIntent err:"+e);
 	  }
   }
+
+  private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
+
+  private void parseIntent(Intent intent) {
+	    // If the Activity was started to service a Search request,
+	    // extract the search query.
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      String searchQuery = intent.getStringExtra(SearchManager.QUERY);
+
+	      // Perform the search, passing in the search query as an argument
+	      // to the Cursor Loader
+	      Bundle args = new Bundle();
+	      args.putString(QUERY_EXTRA_KEY, searchQuery);
+	      
+	      // Restart the Cursor Loader to execute the new query.
+	      getLoaderManager().restartLoader(0, args, this);
+	    }
+
+  
 }

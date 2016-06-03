@@ -13,9 +13,18 @@ import android.content.Intent;
 public class EarthquakeSearchResultsFragment extends ListFragment implements  OnQueryTextListener,LoaderCallbacks<Cursor> {
 
 	private SimpleCursorAdapter mAdapter;
-	
+	private String mQuery = "";
 	public EarthquakeSearchResultsFragment() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void setQuery(String _Query)
+	{
+		mQuery = _Query;
+	}
+	public String getQuery()
+	{
+		return (mQuery);
 	}
 	
 	@Override

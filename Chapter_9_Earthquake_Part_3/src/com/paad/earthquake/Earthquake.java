@@ -83,7 +83,13 @@ public class Earthquake extends Activity {
       case R.id.stop_update_service:
     	  stopService(new Intent(this, EarthquakeUpdateService.class));
           return true;
-      }
+      case R.id.start_auto_update_service:
+    	  startAutoUpdate();
+    	  return true;
+      case R.id.stop_auto_update_service:
+    	  stopAutoUpdate();
+    	  return true;
+    }
     return false;
   }
 
@@ -127,4 +133,25 @@ public class Earthquake extends Activity {
 		  Log.e(TAG, "handleIntent err:"+e);
 	  }
   }
+  public void startAutoUpdate()
+  {
+	  try{
+	  
+	  }catch(Exception e)
+	  {
+		  Log.e(TAG, "startAutoUpdate err:"+e);
+	  }
+	  
+  }
+  public void stopAutoUpdate()
+  {
+	  try{
+	  
+	  }catch(Exception e)
+	  {
+		  Log.e(TAG, "stopAutoUpdate err:"+e);
+	  }
+	  
+  }
+
 }

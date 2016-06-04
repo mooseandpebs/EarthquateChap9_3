@@ -10,7 +10,8 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SimpleCursorAdapter;
 import android.content.Intent;
 
-public class EarthquakeSearchResultsFragment extends ListFragment implements  OnQueryTextListener,LoaderCallbacks<Cursor> {
+public class EarthquakeSearchResultsFragment extends ListFragment implements  
+	OnQueryTextListener,LoaderCallbacks<Cursor> {
 
 	private SimpleCursorAdapter mAdapter;
 	

@@ -17,51 +17,50 @@ import android.view.View;
 import android.widget.SearchView;
 
 public class Earthquake extends Activity {
-  
-  private final static String TAG = "Earthquake";
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
 
-    
-    // Use the Search Manager to find the SearchableInfo related to this 
-    // Activity.
-  }
+	private final static String TAG = "Earthquake";
 
-  
-  static final private int MENU_PREFERENCES = Menu.FIRST+1;
-  static final private int MENU_UPDATE = Menu.FIRST+2;
-  private static final int SHOW_PREFERENCES = 1;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    //super.onCreateOptionsMenu(menu);
-    try{
-    	getMenuInflater().inflate(R.menu.preferences, menu);
-    	updateFromPreferences();
-	    SearchManager searchManager = 
-	    (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView)menu.findItem(R.id.search_view_id).getActionView();
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    handleIntent(getIntent());
-    }catch(Exception e)
-    {
-    	Log.e(TAG,"err:"+e);
-    }
-    return true;
-  }
-@Override
+		// Use the Search Manager to find the SearchableInfo related to this
+		// Activity.
+	}
+
+	static final private int MENU_PREFERENCES = Menu.FIRST + 1;
+	static final private int MENU_UPDATE = Menu.FIRST + 2;
+	private static final int SHOW_PREFERENCES = 1;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// super.onCreateOptionsMenu(menu);
+		try {
+			getMenuInflater().inflate(R.menu.preferences, menu);
+			updateFromPreferences();
+			SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			SearchView searchView = (SearchView) menu.findItem(R.id.search_view_id).getActionView();
+			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+			handleIntent(getIntent());
+		} catch (Exception e) {
+			Log.e(TAG, "err:" + e);
+		}
+		return true;
+	}
+
+	@Override
 	public View onCreateView(String name, Context context, AttributeSet attrs) {
 		return super.onCreateView(name, context, attrs);
 	}
-@Override
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
-
 	}
-@Override
+
+	@Override
 	protected void onNewIntent(Intent intent) {
 		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
@@ -70,10 +69,11 @@ public class Earthquake extends Activity {
 		handleIntent(intent);
 	}
 
-  public boolean onOptionsItemSelected(MenuItem item){
-    super.onOptionsItemSelected(item);
-    switch (item.getItemId()) {
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
 
+<<<<<<< HEAD
       case R.id.settings: 
     	  launchOptionSettings();
     	  return true;
@@ -92,25 +92,36 @@ public class Earthquake extends Activity {
     }
     return false;
   }
+=======
+		case R.id.settings:
+			launchOptionSettings();
+			return true;
+		case R.id.start_update_service:
+			startService(new Intent(this, EarthquakeUpdateService.class));
+			return true;
+		case R.id.stop_update_service:
+			stopService(new Intent(this, EarthquakeUpdateService.class));
+			return true;
+		}
+		return false;
+	}
+>>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
 
-  
-  public int minimumMagnitude = 0;
-  public boolean autoUpdateChecked = false;
-  public int updateFreq = 0;
+	public int minimumMagnitude = 0;
+	public boolean autoUpdateChecked = false;
+	public int updateFreq = 0;
 
-  private void updateFromPreferences() {
-    Context context = getApplicationContext();
-    SharedPreferences prefs = 
-      PreferenceManager.getDefaultSharedPreferences(context);
+	private void updateFromPreferences() {
+		Context context = getApplicationContext();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-    minimumMagnitude = 
-      Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));
-    updateFreq = 
-      Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
+		minimumMagnitude = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));
+		updateFreq = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
 
-    autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
-  }
+		autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
+	}
 
+<<<<<<< HEAD
   static final String PREF_FRAGMENT="JsonPreferencesFragment";
   void launchOptionSettings()
   {
@@ -153,5 +164,50 @@ public class Earthquake extends Activity {
 	  }
 	  
   }
+=======
+	static final String PREF_FRAGMENT = "JsonPreferencesFragment";
+
+	void launchOptionSettings() {
+		getFragmentManager().beginTransaction().replace(R.id.container, new EarthquakePreferencesFragment())
+				.addToBackStack(PREF_FRAGMENT).commit();
+
+	}
+
+	public void handleIntent(Intent intent) {
+		try {
+			parseIntent(intent);
+		} catch (Exception e) {
+			Log.e(TAG, "handleIntent err:" + e);
+		}
+	}
+
+	private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
+
+	private String EARTHQUAKESEARCHRESULTSFRAGMENT = "EarthquakeSearchResultsFragment";
+
+	private void parseIntent(Intent intent) {
+		// If the Activity was started to service a Search request,
+		// extract the search query.
+		try {
+			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
+				EarthquakeSearchResultsFragment frag;
+				if (getFragmentManager()
+						.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT)==null) {
+					frag = new EarthquakeSearchResultsFragment();
+				}else{
+					frag = (EarthquakeSearchResultsFragment)getFragmentManager()
+							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT); 
+				}
+				frag.setQuery(searchQuery);
+				getFragmentManager().beginTransaction().replace(R.id.container, frag)
+						.addToBackStack(EARTHQUAKESEARCHRESULTSFRAGMENT).commit();
+
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "parseIntent" + e);
+		}
+	}
+>>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
 
 }

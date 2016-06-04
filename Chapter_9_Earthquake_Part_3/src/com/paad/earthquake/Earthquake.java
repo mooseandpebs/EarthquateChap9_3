@@ -72,9 +72,6 @@ public class Earthquake extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
-
-<<<<<<< HEAD
-<<<<<<< HEAD
       case R.id.settings: 
     	  launchOptionSettings();
     	  return true;
@@ -93,35 +90,6 @@ public class Earthquake extends Activity {
     }
     return false;
   }
-=======
-		case R.id.settings:
-			launchOptionSettings();
-			return true;
-		case R.id.start_update_service:
-			startService(new Intent(this, EarthquakeUpdateService.class));
-			return true;
-		case R.id.stop_update_service:
-			stopService(new Intent(this, EarthquakeUpdateService.class));
-			return true;
-		}
-		return false;
-	}
->>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
-=======
-		case R.id.settings:
-			launchOptionSettings();
-			return true;
-		case R.id.start_update_service:
-			startService(new Intent(this, EarthquakeUpdateService.class));
-			return true;
-		case R.id.stop_update_service:
-			stopService(new Intent(this, EarthquakeUpdateService.class));
-			return true;
-		}
-		return false;
-	}
->>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
-
 	public int minimumMagnitude = 0;
 	public boolean autoUpdateChecked = false;
 	public int updateFreq = 0;
@@ -136,8 +104,6 @@ public class Earthquake extends Activity {
 		autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   static final String PREF_FRAGMENT="JsonPreferencesFragment";
   void launchOptionSettings()
   {
@@ -180,22 +146,6 @@ public class Earthquake extends Activity {
 	  }
 	  
   }
-=======
-	static final String PREF_FRAGMENT = "JsonPreferencesFragment";
-
-	void launchOptionSettings() {
-		getFragmentManager().beginTransaction().replace(R.id.container, new EarthquakePreferencesFragment())
-				.addToBackStack(PREF_FRAGMENT).commit();
-
-	}
-
-	public void handleIntent(Intent intent) {
-		try {
-			parseIntent(intent);
-		} catch (Exception e) {
-			Log.e(TAG, "handleIntent err:" + e);
-		}
-	}
 
 	private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
 
@@ -224,51 +174,5 @@ public class Earthquake extends Activity {
 			Log.e(TAG, "parseIntent" + e);
 		}
 	}
->>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
-=======
-	static final String PREF_FRAGMENT = "JsonPreferencesFragment";
-
-	void launchOptionSettings() {
-		getFragmentManager().beginTransaction().replace(R.id.container, new EarthquakePreferencesFragment())
-				.addToBackStack(PREF_FRAGMENT).commit();
-
-	}
-
-	public void handleIntent(Intent intent) {
-		try {
-			parseIntent(intent);
-		} catch (Exception e) {
-			Log.e(TAG, "handleIntent err:" + e);
-		}
-	}
-
-	private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
-
-	private String EARTHQUAKESEARCHRESULTSFRAGMENT = "EarthquakeSearchResultsFragment";
-
-	private void parseIntent(Intent intent) {
-		// If the Activity was started to service a Search request,
-		// extract the search query.
-		try {
-			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-				EarthquakeSearchResultsFragment frag;
-				if (getFragmentManager()
-						.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT)==null) {
-					frag = new EarthquakeSearchResultsFragment();
-				}else{
-					frag = (EarthquakeSearchResultsFragment)getFragmentManager()
-							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT); 
-				}
-				frag.setQuery(searchQuery);
-				getFragmentManager().beginTransaction().replace(R.id.container, frag)
-						.addToBackStack(EARTHQUAKESEARCHRESULTSFRAGMENT).commit();
-
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "parseIntent" + e);
-		}
-	}
->>>>>>> branch 'working' of https://github.com/mooseandpebs/EarthquateChap9_3.git
 
 }

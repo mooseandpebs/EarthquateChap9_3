@@ -30,7 +30,6 @@
       <intent-filter>
 	      <action android:name="android.intent.action.SEARCH" />
           <action android:name="android.intent.action.MAIN" />
-	      <!--  -->category android:name="android.intent.category.DEFAULT" /-->
 	    <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
  	  <meta-data
@@ -38,7 +37,6 @@
 	    android:resource="@xml/searchable"
 	  />
       </activity>
-    <activity android:name=".EarthquakePreferencesFragment"/>
     <provider android:name=".EarthquakeProvider"
           android:authorities="com.paad.earthquakeprovider" />
     <!-- activity android:name=".EarthquakeSearchResults" 

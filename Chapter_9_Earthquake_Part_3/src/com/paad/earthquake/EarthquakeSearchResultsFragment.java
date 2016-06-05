@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SimpleCursorAdapter;
+import android.content.CursorLoader;
 import android.content.Intent;
 
 public class EarthquakeSearchResultsFragment extends ListFragment
@@ -31,12 +32,18 @@ public class EarthquakeSearchResultsFragment extends ListFragment
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		try{
 		super.onCreate(savedInstanceState);
-		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, null,
+		
+		mAdapter = new SimpleCursorAdapter(
+				getActivity(), android.R.layout.simple_expandable_list_item_1, null,
 				new String[] { EarthquakeProvider.KEY_SUMMARY }, new int[] { android.R.id.text1 }, 0);
 		setListAdapter(mAdapter);
 		getLoaderManager().initLoader(0, null, this);
 		sendQuery();
+		}catch(Exception e){
+			Log.e(TAG, "onCreate err:"+e);
+		}
 	}
 
 	@Override
@@ -48,14 +55,32 @@ public class EarthquakeSearchResultsFragment extends ListFragment
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// TODO Auto-generated method stub
+		try{
+		String[] projection = { EarthquakeProvider.KEY_ID, 
+		        EarthquakeProvider.KEY_SUMMARY };
+		    String where = EarthquakeProvider.KEY_SUMMARY
+		                     + " LIKE \"%" + mQuery + "%\"";
+		    String[] whereArgs = null;
+		    String sortOrder = EarthquakeProvider.KEY_SUMMARY + " COLLATE LOCALIZED ASC";
+		    
+		    // Create the new Cursor loader.
+		    return new CursorLoader(getActivity(), EarthquakeProvider.CONTENT_URI,
+		            projection, where, whereArgs,
+		            sortOrder);
+		}catch(Exception e){
+			Log.e(TAG, "onCreateLoader err:"+e);
+		}
 		return null;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		// TODO Auto-generated method stub
-
+		try{
+			mAdapter.swapCursor(data);
+		}catch(Exception e)
+		{
+			Log.e(TAG,"onLoadFinished err:"+e);
+		}
 	}
 
 	@Override

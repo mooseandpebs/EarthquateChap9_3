@@ -6,15 +6,17 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SimpleCursorAdapter;
 import android.content.Intent;
 
 public class EarthquakeSearchResultsFragment extends ListFragment implements  
 	OnQueryTextListener,LoaderCallbacks<Cursor> {
-
+	private static final String TAG = "EarthquakeSearchResultsFragment";
 	private SimpleCursorAdapter mAdapter;
 	private String mQuery = "";
+	
 	public EarthquakeSearchResultsFragment() {
 		// TODO Auto-generated constructor stub
 	}
@@ -35,7 +37,7 @@ public class EarthquakeSearchResultsFragment extends ListFragment implements
 				new String[] {EarthquakeProvider.KEY_SUMMARY},new int[] {android.R.id.text1},0);
 		setListAdapter(mAdapter);
 		getLoaderManager().initLoader(0, null, this);
-		parseIntent(getActivity().getIntent());
+		sendQuery();
 	}
 	
 	@Override
@@ -66,20 +68,19 @@ public class EarthquakeSearchResultsFragment extends ListFragment implements
 
   private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
 	
-  private void parseIntent(Intent intent) {
-	    // If the Activity was started to service a Search request,
-	    // extract the search query.
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-
+  private void sendQuery() {
 	      // Perform the search, passing in the search query as an argument
 	      // to the Cursor Loader
+	  if(!mQuery.isEmpty()) {
 	      Bundle args = new Bundle();
-	      args.putString(QUERY_EXTRA_KEY, searchQuery);
-	      
+	      args.putString(QUERY_EXTRA_KEY, mQuery);
+	  
 	      // Restart the Cursor Loader to execute the new query.
 	      getLoaderManager().restartLoader(0, args, this);
-	    }
+  }else
+  {
+	  Log.e(TAG, "query was empty in send Query");
+  }
 	  }
   
   	// implements of OnQueryTextListener

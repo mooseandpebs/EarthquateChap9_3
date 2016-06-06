@@ -62,17 +62,19 @@ public class Earthquake extends Activity {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
-		super.onNewIntent(intent);
-		Log.e(TAG, "got new intent");
-		setIntent(intent);
-		handleIntent(intent);
+		try {
+			super.onNewIntent(intent);
+			Log.e(TAG, "got new intent");
+			setIntent(intent);
+			handleIntent(intent);
+		} catch (Exception e) {
+			Log.e(TAG, "onNewIntent err:" + e);
+		}
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
-
 		case R.id.settings:
 			launchOptionSettings();
 			return true;
@@ -81,6 +83,12 @@ public class Earthquake extends Activity {
 			return true;
 		case R.id.stop_update_service:
 			stopService(new Intent(this, EarthquakeUpdateService.class));
+			return true;
+		case R.id.start_auto_update_service:
+			startAutoUpdate();
+			return true;
+		case R.id.stop_auto_update_service:
+			stopAutoUpdate();
 			return true;
 		}
 		return false;
@@ -103,17 +111,41 @@ public class Earthquake extends Activity {
 	static final String PREF_FRAGMENT = "JsonPreferencesFragment";
 
 	void launchOptionSettings() {
-		getFragmentManager().beginTransaction().replace(R.id.container, new EarthquakePreferencesFragment())
-				.addToBackStack(PREF_FRAGMENT).commit();
+		try {
+			getFragmentManager().beginTransaction().replace(R.id.container, new EarthquakePreferencesFragment())
+					.addToBackStack(PREF_FRAGMENT).commit();
+		} catch (Exception e) {
+			Log.e(TAG, "launchOptionSettings err:" + e);
+		}
 
 	}
 
 	public void handleIntent(Intent intent) {
 		try {
-			parseIntent(intent);
+			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+				parseIntent(intent);
+			}
 		} catch (Exception e) {
 			Log.e(TAG, "handleIntent err:" + e);
 		}
+	}
+
+	public void startAutoUpdate() {
+		try {
+
+		} catch (Exception e) {
+			Log.e(TAG, "startAutoUpdate err:" + e);
+		}
+
+	}
+
+	public void stopAutoUpdate() {
+		try {
+
+		} catch (Exception e) {
+			Log.e(TAG, "stopAutoUpdate err:" + e);
+		}
+
 	}
 
 	private static String QUERY_EXTRA_KEY = "QUERY_EXTRA_KEY";
@@ -127,12 +159,11 @@ public class Earthquake extends Activity {
 			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
 				EarthquakeSearchResultsFragment frag;
-				if (getFragmentManager()
-						.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT)==null) {
+				if (getFragmentManager().findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT) == null) {
 					frag = new EarthquakeSearchResultsFragment();
-				}else{
-					frag = (EarthquakeSearchResultsFragment)getFragmentManager()
-							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT); 
+				} else {
+					frag = (EarthquakeSearchResultsFragment) getFragmentManager()
+							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT);
 				}
 				frag.setQuery(searchQuery);
 				getFragmentManager().beginTransaction().replace(R.id.container, frag)

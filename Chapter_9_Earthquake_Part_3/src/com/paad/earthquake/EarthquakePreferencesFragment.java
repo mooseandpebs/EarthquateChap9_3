@@ -43,8 +43,14 @@ implements OnSharedPreferenceChangeListener {
 	
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
-		
+		String autoUpdateKey = getResources().getString(R.string.auto_update_key);
+		Boolean autoUpdate = null;
+		if(key.equals(autoUpdateKey))
+		{
+			autoUpdate = sharedPreferences.getBoolean(key, false);
+		}
+		Log.e(TAG, "auto update="+autoUpdate);
+			
 	}
 	
 	@Override

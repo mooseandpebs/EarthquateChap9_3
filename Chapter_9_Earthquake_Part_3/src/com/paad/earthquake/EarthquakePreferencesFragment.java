@@ -51,8 +51,6 @@ implements OnSharedPreferenceChangeListener {
 		{
 			autoUpdate = sharedPreferences.getBoolean(key, false);
 		}
-		Log.e(TAG, "auto update="+autoUpdate);
-			
 	}
 	
 	@Override

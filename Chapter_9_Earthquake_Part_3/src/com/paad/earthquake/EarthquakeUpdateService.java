@@ -237,16 +237,23 @@ public class EarthquakeUpdateService extends IntentService {
     PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
     		,mAlarmIntent
     		, PendingIntent.FLAG_NO_CREATE);  
-    boolean alarmRunning = (alarmPendingIntent == null);
-    if (autoUpdateChecked && !alarmRunning) {
+    boolean alarmRunning = (alarmPendingIntent != null);
+    if (autoUpdateChecked) {
       int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
       long timeToRefresh = SystemClock.elapsedRealtime() +
                            updateFreq*60*1000;
+      if(alarmRunning)
+      {
+    	    alarmIntent = PendingIntent.getBroadcast(context, mAlarmID
+    	    		,mAlarmIntent
+    	    		, PendingIntent.FLAG_UPDATE_CURRENT);  
+
+      }
       alarmManager.setInexactRepeating(alarmType, timeToRefresh,
                                        updateFreq*60*1000, alarmIntent); 
       Log.i(TAG, "Alarm started update Freq="+updateFreq);
     }
-    else if (alarmRunning)
+    else if (!autoUpdateChecked)
     {
       alarmManager.cancel(alarmIntent);
       Log.i(TAG, "Alarm Stopped");

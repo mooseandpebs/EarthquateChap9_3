@@ -236,7 +236,8 @@ public class EarthquakeUpdateService extends IntentService {
       prefs.getBoolean(autoUpdateFreqKey, false);
     PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
     		,mAlarmIntent
-    		, PendingIntent.FLAG_NO_CREATE);  
+    		, PendingIntent.FLAG_NO_CREATE);
+    
     boolean alarmRunning = (alarmPendingIntent != null);
     if (autoUpdateChecked) {
       int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
@@ -244,34 +245,43 @@ public class EarthquakeUpdateService extends IntentService {
                            updateFreq*60*1000;
       if(alarmRunning)
       {
-    	    alarmIntent = PendingIntent.getBroadcast(context, mAlarmID
+    	    mPendingAlarmIntent = PendingIntent.getBroadcast(context, mAlarmID
     	    		,mAlarmIntent
-    	    		, PendingIntent.FLAG_UPDATE_CURRENT);  
+    	    		, PendingIntent.FLAG_CANCEL_CURRENT);  
 
       }
       alarmManager.setInexactRepeating(alarmType, timeToRefresh,
-                                       updateFreq*60*1000, alarmIntent); 
+                                       updateFreq*60*1000, mPendingAlarmIntent); 
+      if(updateFreq >50)
+      {
+	      mPendingAlarmIntent = PendingIntent.getBroadcast(context, mAlarmID
+		    		,mAlarmIntent
+		    		,0);
+	      alarmManager.setInexactRepeating(alarmType, timeToRefresh,
+                  updateFreq*60*1000, mPendingAlarmIntent); 
+      }
       Log.i(TAG, "Alarm started update Freq="+updateFreq);
     }
     else if (!autoUpdateChecked)
     {
-      alarmManager.cancel(alarmIntent);
+      alarmManager.cancel(mPendingAlarmIntent);
       Log.i(TAG, "Alarm Stopped");
     }
   };
 
 
   private AlarmManager alarmManager;
-  private PendingIntent alarmIntent;
+  private PendingIntent mPendingAlarmIntent;
   private static final int mAlarmID = 69;
-  private static final Intent mAlarmIntent = new Intent(EarthquakeAlarmReceiver.ACTION_REFRESH_EARTHQUAKE_ALARM);
+  private Intent mAlarmIntent;
   @Override
   public void onCreate() {
     super.onCreate();
+    mAlarmIntent = new Intent(this,com.paad.earthquake.EarthquakeAlarmReceiver.class);
     alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
-    alarmIntent =
-      PendingIntent.getBroadcast(this, mAlarmID,mAlarmIntent , 0);
+    mPendingAlarmIntent =
+      PendingIntent.getBroadcast(this, mAlarmID,mAlarmIntent , PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
 }

@@ -71,7 +71,8 @@ public class Earthquake extends Activity {
 			Log.e(TAG, "onNewIntent err:" + e);
 		}
 	}
-
+	public static final String UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY = "UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY";
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
@@ -79,7 +80,9 @@ public class Earthquake extends Activity {
 			launchOptionSettings();
 			return true;
 		case R.id.start_update_service:
-			startService(new Intent(this, EarthquakeUpdateService.class));
+			Intent intent = new Intent(this, EarthquakeUpdateService.class);
+			intent.putExtra(UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY, true);
+			startService(intent);
 			return true;
 		case R.id.stop_update_service:
 			stopService(new Intent(this, EarthquakeUpdateService.class));

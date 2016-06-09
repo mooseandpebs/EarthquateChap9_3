@@ -57,11 +57,14 @@ public class EarthquakeUpdateService extends IntentService {
 	{
 		Log.e(TAG,"onHandleIntent refreshEarthquakes err:"+e);
 	}
-	try{
-		startOrStopAlarm();
-	}catch(Exception e)
+	if(intent.hasExtra(Earthquake.UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY))
 	{
-		Log.e(TAG,"onHandleIntent startOrStopAlarm err:"+e);
+		try{
+			startOrStopAlarm();
+		}catch(Exception e)
+		{
+			Log.e(TAG,"onHandleIntent startOrStopAlarm err:"+e);
+		}
 	}
 	Log.i(TAG, " EartquakeUpdateService Running");
   }
@@ -232,39 +235,42 @@ public class EarthquakeUpdateService extends IntentService {
     String autoUpdateFreqKey = getResources().getString(R.string.auto_update_key);
     int updateFreq = 
       Integer.parseInt(prefs.getString(updateFreqKey, "60"));
+
+    mAlarmIntent = new Intent(context,com.paad.earthquake.EarthquakeAlarmReceiver.class);
+    alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
     boolean autoUpdateChecked = 
       prefs.getBoolean(autoUpdateFreqKey, false);
     PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
     		,mAlarmIntent
-    		, PendingIntent.FLAG_NO_CREATE);
+    		,PendingIntent.FLAG_NO_CREATE);
     
-    boolean alarmRunning = (alarmPendingIntent != null);
+    
+    if(alarmPendingIntent != null)
+    {
+        alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
+        		,mAlarmIntent
+        		,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    else
+    {
+        alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
+        		,mAlarmIntent
+        		,0);    	
+    }
     if (autoUpdateChecked) {
       int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
       long timeToRefresh = SystemClock.elapsedRealtime() +
                            updateFreq*60*1000;
-      if(alarmRunning)
-      {
-    	    mPendingAlarmIntent = PendingIntent.getBroadcast(context, mAlarmID
-    	    		,mAlarmIntent
-    	    		, PendingIntent.FLAG_CANCEL_CURRENT);  
-
-      }
+      
       alarmManager.setInexactRepeating(alarmType, timeToRefresh,
-                                       updateFreq*60*1000, mPendingAlarmIntent); 
-      if(updateFreq >50)
-      {
-	      mPendingAlarmIntent = PendingIntent.getBroadcast(context, mAlarmID
-		    		,mAlarmIntent
-		    		,0);
-	      alarmManager.setInexactRepeating(alarmType, timeToRefresh,
-                  updateFreq*60*1000, mPendingAlarmIntent); 
-      }
+                                       updateFreq*60*1000, alarmPendingIntent); 
       Log.i(TAG, "Alarm started update Freq="+updateFreq);
     }
     else if (!autoUpdateChecked)
     {
-      alarmManager.cancel(mPendingAlarmIntent);
+      alarmManager.cancel(alarmPendingIntent);
+      alarmPendingIntent.cancel();
       Log.i(TAG, "Alarm Stopped");
     }
   };
@@ -277,11 +283,6 @@ public class EarthquakeUpdateService extends IntentService {
   @Override
   public void onCreate() {
     super.onCreate();
-    mAlarmIntent = new Intent(this,com.paad.earthquake.EarthquakeAlarmReceiver.class);
-    alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-    mPendingAlarmIntent =
-      PendingIntent.getBroadcast(this, mAlarmID,mAlarmIntent , PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
 }

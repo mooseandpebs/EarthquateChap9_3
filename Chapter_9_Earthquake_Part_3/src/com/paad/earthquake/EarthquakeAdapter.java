@@ -1,11 +1,15 @@
 package com.paad.earthquake;
 
+import java.util.concurrent.ConcurrentHashMap;
+
+import android.R.integer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public class EarthquakeAdapter extends BaseAdapter {
 
+	private ConcurrentHashMap<Integer, Quake> mQuakeMap = new ConcurrentHashMap<Integer, Quake>();
 	public EarthquakeAdapter() {
 		super();
 		

@@ -3,6 +3,7 @@ package com.paad.earthquake;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.R.integer;
+import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -40,6 +41,11 @@ public class EarthquakeAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void swapCursor(Cursor _Cursor)
+	{
+		
 	}
 
 }

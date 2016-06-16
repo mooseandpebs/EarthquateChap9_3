@@ -1,5 +1,8 @@
 package com.paad.earthquake;
 
+import com.paad.earthquake.EarthquakeListFragment.Callback;
+
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -12,18 +15,32 @@ import android.widget.SimpleCursorAdapter;
 
 public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
   
-  SimpleCursorAdapter adapter;
-
+  EarthquakeAdapter mEarthquakeAdapter;
+  Callback mCallback;
+  
+  public interface Callback
+  {
+	  public void positionToMapCalled(Quake _Quakedata);
+  }
+  
+  @Override
+  public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		if(!(activity instanceof Callback))
+		{
+			throw new IllegalStateException("Activity must implement fragments Callback interface");
+		}
+		mCallback = (Callback)activity;
+	}
+  
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
     // Create a new Adapter and bind it to the List View
-    adapter = new SimpleCursorAdapter(getActivity(),
-      android.R.layout.simple_list_item_1, null,
-      new String[] { EarthquakeProvider.KEY_SUMMARY },
-      new int[] { android.R.id.text1 }, 0);
-    setListAdapter(adapter);
+    mEarthquakeAdapter = new EarthquakeAdapter();
+    setListAdapter(mEarthquakeAdapter);
 
     getLoaderManager().initLoader(0, null, this);  
 
@@ -68,11 +85,11 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
   }
 
   public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-    adapter.swapCursor(cursor);
+    mEarthquakeAdapter.swapCursor(cursor);
   }
 
   public void onLoaderReset(Loader<Cursor> loader) {
-    adapter.swapCursor(null);
+    mEarthquakeAdapter.swapCursor(null);
   }
 
 

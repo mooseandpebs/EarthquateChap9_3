@@ -1,6 +1,5 @@
 package com.paad.earthquake;
 
-import com.paad.earthquake.EarthquakeListFragment.Callback;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -11,9 +10,11 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ArrayAdapter;
 import android.widget.SimpleCursorAdapter;
 
-public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+{
   
   EarthquakeAdapter mEarthquakeAdapter;
   Callback mCallback;

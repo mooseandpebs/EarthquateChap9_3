@@ -13,7 +13,7 @@
         android:layout_marginStart="100dp"
         android:background="#adaaad"
         android:clickable="true"
-        android:text="@string/QuakeDate_id"
+        android:text="@string/quake_date_desc"
         android:textAppearance="?android:attr/textAppearanceMedium" >
     </TextView>
 
@@ -25,19 +25,7 @@
         android:layout_marginStart="10dp"
         android:background="#adbbad"
         android:clickable="true"
-        android:text="@string/listheader_employee_id"
-        android:textAppearance="?android:attr/textAppearanceMedium" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/listheader_employee_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="10dp"
-        android:background="#adccad"
-        android:clickable="true"
-        android:text="@string/listheader_employee_name"
+        android:text="@string/quake_info_desc"
         android:textAppearance="?android:attr/textAppearanceMedium" >
     </TextView>
 

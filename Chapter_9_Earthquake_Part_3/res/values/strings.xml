@@ -18,7 +18,7 @@
   <string name="stop_update_service_desc">Stop Update</string>
   <string name="stop_auto_update_service_desc">Stop Auto Update</string>
   <string name="start_auto_update_service_desc">Start Auto Update</string>
-  <string name="footer_submit_button">Submit poodle</string>
-  <string name="quake_header"></string>
-
+  <string name="footer_submit_button">Submit or Die</string>
+  <string name="quake_date_desc">Date</string>
+  <string name="quake_info_desc">Info</string>
 </resources>

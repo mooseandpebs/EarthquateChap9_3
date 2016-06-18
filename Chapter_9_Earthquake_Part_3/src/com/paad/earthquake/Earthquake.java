@@ -1,5 +1,7 @@
 package com.paad.earthquake;
 
+import com.paad.earthquake.EarthquakeListFragment.Callback;
+
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -14,9 +16,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 
-public class Earthquake extends Activity {
+public class Earthquake extends Activity implements Callback {
 
 	private final static String TAG = "Earthquake";
 
@@ -24,7 +28,6 @@ public class Earthquake extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
 		// Use the Search Manager to find the SearchableInfo related to this
 		// Activity.
 	}
@@ -161,11 +164,12 @@ public class Earthquake extends Activity {
 		try {
 			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
-				EarthquakeSearchResultsFragment frag;
+				//EarthquakeSearchResultsFragment frag;
+				EarthquakeListFragment frag;
 				if (getFragmentManager().findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT) == null) {
-					frag = new EarthquakeSearchResultsFragment();
+					frag = new EarthquakeListFragment();
 				} else {
-					frag = (EarthquakeSearchResultsFragment) getFragmentManager()
+					frag = (EarthquakeListFragment) getFragmentManager()
 							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT);
 				}
 				frag.setQuery(searchQuery);
@@ -177,5 +181,8 @@ public class Earthquake extends Activity {
 			Log.e(TAG, "parseIntent" + e);
 		}
 	}
-
+	public void positionToMapCalled(Quake _Quakedata)
+	{
+		
+	}
 }

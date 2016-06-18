@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,8 +44,13 @@ implements OnSharedPreferenceChangeListener {
 	
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
+		String autoUpdateKey = getResources().getString(R.string.auto_update_key);
+		Boolean autoUpdate = null;
 		
+		if(key.equals(autoUpdateKey))
+		{
+			autoUpdate = sharedPreferences.getBoolean(key, false);
+		}
 	}
 	
 	@Override
@@ -57,7 +63,14 @@ implements OnSharedPreferenceChangeListener {
 		boolean update =
 		getPreferenceManager().getSharedPreferences() 
 			.getBoolean(getResources().getString(R.string.auto_update_key), false);
-
+		getPreferenceManager();
+		boolean update2 =
+		PreferenceManager.getDefaultSharedPreferences(getActivity()) 
+			.getBoolean(getResources().getString(R.string.auto_update_key), false);
+		if(update2){
+			Log.i(TAG, "on Resume set");
+		}
+		
 	}
 	
 }

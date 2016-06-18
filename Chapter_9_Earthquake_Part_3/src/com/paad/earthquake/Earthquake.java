@@ -1,5 +1,10 @@
 package com.paad.earthquake;
 
+<<<<<<< HEAD
+=======
+import com.paad.earthquake.EarthquakeListFragment.Callback;
+
+>>>>>>> origin/working
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -14,9 +19,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.SearchView;
 
 public class Earthquake extends Activity {
+=======
+import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.SearchView;
+
+public class Earthquake extends Activity implements Callback {
+>>>>>>> origin/working
 
 	private final static String TAG = "Earthquake";
 
@@ -24,7 +37,10 @@ public class Earthquake extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/working
 		// Use the Search Manager to find the SearchableInfo related to this
 		// Activity.
 	}
@@ -71,7 +87,12 @@ public class Earthquake extends Activity {
 			Log.e(TAG, "onNewIntent err:" + e);
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	public static final String UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY = "UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY";
+	
+>>>>>>> origin/working
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
@@ -79,7 +100,13 @@ public class Earthquake extends Activity {
 			launchOptionSettings();
 			return true;
 		case R.id.start_update_service:
+<<<<<<< HEAD
 			startService(new Intent(this, EarthquakeUpdateService.class));
+=======
+			Intent intent = new Intent(this, EarthquakeUpdateService.class);
+			intent.putExtra(UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY, true);
+			startService(intent);
+>>>>>>> origin/working
 			return true;
 		case R.id.stop_update_service:
 			stopService(new Intent(this, EarthquakeUpdateService.class));
@@ -158,11 +185,20 @@ public class Earthquake extends Activity {
 		try {
 			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
+<<<<<<< HEAD
 				EarthquakeSearchResultsFragment frag;
 				if (getFragmentManager().findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT) == null) {
 					frag = new EarthquakeSearchResultsFragment();
 				} else {
 					frag = (EarthquakeSearchResultsFragment) getFragmentManager()
+=======
+				//EarthquakeSearchResultsFragment frag;
+				EarthquakeListFragment frag;
+				if (getFragmentManager().findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT) == null) {
+					frag = new EarthquakeListFragment();
+				} else {
+					frag = (EarthquakeListFragment) getFragmentManager()
+>>>>>>> origin/working
 							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT);
 				}
 				frag.setQuery(searchQuery);
@@ -174,5 +210,12 @@ public class Earthquake extends Activity {
 			Log.e(TAG, "parseIntent" + e);
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	public void positionToMapCalled(Quake _Quakedata)
+	{
+		
+	}
+>>>>>>> origin/working
 }

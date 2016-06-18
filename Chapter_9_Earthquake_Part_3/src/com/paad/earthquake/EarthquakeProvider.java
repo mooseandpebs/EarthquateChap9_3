@@ -109,7 +109,8 @@ public class EarthquakeProvider extends ContentProvider {
       case QUAKE_ID: qb.appendWhere(KEY_ID + "=" + uri.getPathSegments().get(1));
                      break;
       case SEARCH  : qb.appendWhere(KEY_SUMMARY + " LIKE \"%" +
-                       uri.getPathSegments().get(1) + "%\"");
+
+    		  uri.getPathSegments().get(1) + "%\"");
                        qb.setProjectionMap(SEARCH_PROJECTION_MAP);
                      break;
       default      : break;

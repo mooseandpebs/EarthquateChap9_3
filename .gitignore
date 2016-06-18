@@ -27,6 +27,7 @@ $RECYCLE.BIN/
 .DS_Store
 .AppleDouble
 .LSOverride
+.apk
 
 # Thumbnails
 ._*
@@ -45,4 +46,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+<<<<<<< HEAD
 Chapter_9_Earthquake_Part_3/gen/com/paad/earthquake/R.java
+=======
+bin/
+>>>>>>> origin/working

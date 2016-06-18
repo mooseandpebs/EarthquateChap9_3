@@ -51,7 +51,22 @@ public class EarthquakeUpdateService extends IntentService {
   
   @Override
   protected void onHandleIntent(Intent intent) {
-    refreshEarthquakes();
+	try{
+		refreshEarthquakes();
+	}catch(Exception e)
+	{
+		Log.e(TAG,"onHandleIntent refreshEarthquakes err:"+e);
+	}
+	if(intent.hasExtra(Earthquake.UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY))
+	{
+		try{
+			startOrStopAlarm();
+		}catch(Exception e)
+		{
+			Log.e(TAG,"onHandleIntent startOrStopAlarm err:"+e);
+		}
+	}
+	Log.i(TAG, " EartquakeUpdateService Running");
   }
 
   @Override
@@ -140,10 +155,21 @@ public class EarthquakeUpdateService extends IntentService {
 	            String magStr ="";
 	            String maxSTD = "";
 	            try{
+	            	
 		            Element magStrValueE = (Element)magStrE.getElementsByTagName("value").item(0);
 		            Element magStrSTDE = (Element)magStrE.getElementsByTagName("uncertainty").item(0);
-		            magStr = magStrValueE.getTextContent();         
-		            maxSTD = magStrSTDE.getTextContent();
+		            if(magStrValueE != null)
+		            {
+		            	magStr = magStrValueE.getTextContent();
+		            }else{
+		            	magStr = "NA";
+		            }
+		            
+		            if(magStrSTDE != null){
+			            maxSTD = magStrSTDE.getTextContent();		            	
+		            }else{
+		            	maxSTD = "NA";
+		            }
 	            }catch(Exception eee){
 	            	Log.e(TAG, "err:"+eee);
 	            }
@@ -199,45 +225,64 @@ public class EarthquakeUpdateService extends IntentService {
     }
   }
   
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
+  
+  public void startOrStopAlarm() {
     // Retrieve the shared preferences
     Context context = getApplicationContext();
     SharedPreferences prefs = 
       PreferenceManager.getDefaultSharedPreferences(context);
-
+    String updateFreqKey = getResources().getString(R.string.update_freq_key);
+    String autoUpdateFreqKey = getResources().getString(R.string.auto_update_key);
     int updateFreq = 
-      Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
-    boolean autoUpdateChecked = 
-      prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
+      Integer.parseInt(prefs.getString(updateFreqKey, "60"));
 
+    mAlarmIntent = new Intent(context,com.paad.earthquake.EarthquakeAlarmReceiver.class);
+    alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+    boolean autoUpdateChecked = 
+      prefs.getBoolean(autoUpdateFreqKey, false);
+    PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
+    		,mAlarmIntent
+    		,PendingIntent.FLAG_NO_CREATE);
+    
+    
+    if(alarmPendingIntent != null)
+    {
+        alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
+        		,mAlarmIntent
+        		,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    else
+    {
+        alarmPendingIntent = PendingIntent.getBroadcast(context, mAlarmID
+        		,mAlarmIntent
+        		,0);    	
+    }
     if (autoUpdateChecked) {
       int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
       long timeToRefresh = SystemClock.elapsedRealtime() +
                            updateFreq*60*1000;
+      
       alarmManager.setInexactRepeating(alarmType, timeToRefresh,
-                                       updateFreq*60*1000, alarmIntent); 
+                                       updateFreq*60*1000, alarmPendingIntent); 
+      Log.i(TAG, "Alarm started update Freq="+updateFreq);
     }
-    else
-      alarmManager.cancel(alarmIntent);
-
-    return super.onStartCommand(intent, flags, startId);
+    else if (!autoUpdateChecked)
+    {
+      alarmManager.cancel(alarmPendingIntent);
+      alarmPendingIntent.cancel();
+      Log.i(TAG, "Alarm Stopped");
+    }
   };
 
 
   private AlarmManager alarmManager;
-  private PendingIntent alarmIntent;
-
+  private PendingIntent mPendingAlarmIntent;
+  private static final int mAlarmID = 69;
+  private Intent mAlarmIntent;
   @Override
   public void onCreate() {
     super.onCreate();
-    alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-
-    String ALARM_ACTION =
-      EarthquakeAlarmReceiver.ACTION_REFRESH_EARTHQUAKE_ALARM;
-    Intent intentToFire = new Intent(ALARM_ACTION);
-    alarmIntent =
-      PendingIntent.getBroadcast(this, 0, intentToFire, 0);
   }
 
 }

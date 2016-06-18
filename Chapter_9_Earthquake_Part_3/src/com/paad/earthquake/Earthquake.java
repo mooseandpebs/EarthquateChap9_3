@@ -1,7 +1,5 @@
 package com.paad.earthquake;
 
-import com.paad.earthquake.EarthquakeListFragment.Callback;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -20,7 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-public class Earthquake extends Activity implements Callback {
+public class Earthquake extends Activity implements 
+	EarthquakeListFragment.Callback {
 
 	private final static String TAG = "Earthquake";
 
@@ -75,7 +74,6 @@ public class Earthquake extends Activity implements Callback {
 		}
 	}
 	public static final String UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY = "UPDATE_EARTHQUAKE_SERVICE_EXTRA_KEY";
-	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
@@ -185,4 +183,5 @@ public class Earthquake extends Activity implements Callback {
 	{
 		
 	}
+
 }

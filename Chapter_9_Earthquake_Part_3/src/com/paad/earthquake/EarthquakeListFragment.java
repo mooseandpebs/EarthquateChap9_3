@@ -1,6 +1,5 @@
 package com.paad.earthquake;
 
-
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;

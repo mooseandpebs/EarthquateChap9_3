@@ -16,7 +16,6 @@ public class EarthquakeSearchResultsFragment extends ListFragment
 		implements OnQueryTextListener, LoaderCallbacks<Cursor> {
 	private static final String TAG = "EarthquakeSearchResultsFragment";
 	private SimpleCursorAdapter mAdapter;
-	private EarthquakeAdapter mEarthquakeAdapter;
 	private String mQuery = "";
 
 	public EarthquakeSearchResultsFragment() {

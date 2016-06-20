@@ -73,34 +73,42 @@ public class EarthquakeUpdateService extends IntentService {
   public IBinder onBind(Intent intent) {
     return null;
   }
+	private static final
+	SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
   
   private void addNewQuake(Quake quake) {
-    ContentResolver cr = getContentResolver();
+	  
+    try {
+		ContentResolver cr = getContentResolver();
 
-    // Construct a where clause to make sure we don't already have this
-    // earthquake in the provider.
-    String w = EarthquakeProvider.KEY_DATE + " = " + quake.getDate().getTime();
+		// Construct a where clause to make sure we don't already have this
+		// earthquake in the provider.
+		String w = EarthquakeProvider.KEY_DATE + " = " +"'"+mDateFormat.format(quake.getDate())+"'";
+		
+		// If the earthquake is new, insert it into the provider.
+		Cursor query = cr.query(EarthquakeProvider.CONTENT_URI, null, w, null, null);
+		
+		if (query.getCount()==0) {
+		  ContentValues values = new ContentValues();
 
-    // If the earthquake is new, insert it into the provider.
-    Cursor query = cr.query(EarthquakeProvider.CONTENT_URI, null, w, null, null);
-    
-    if (query.getCount()==0) {
-      ContentValues values = new ContentValues();
+		  //values.put(EarthquakeProvider.KEY_DATE, quake.getDate().getTime());
+		  values.put(EarthquakeProvider.KEY_DATE, mDateFormat.format(quake.getDate()));
+		  values.put(EarthquakeProvider.KEY_DETAILS, quake.getDetails());   
+		  values.put(EarthquakeProvider.KEY_SUMMARY, quake.toString());
 
-      values.put(EarthquakeProvider.KEY_DATE, quake.getDate().getTime());
-      values.put(EarthquakeProvider.KEY_DETAILS, quake.getDetails());   
-      values.put(EarthquakeProvider.KEY_SUMMARY, quake.toString());
+		  double lat = quake.getLocation().getLatitude();
+		  double lng = quake.getLocation().getLongitude();
+		  values.put(EarthquakeProvider.KEY_LOCATION_LAT, lat);
+		  values.put(EarthquakeProvider.KEY_LOCATION_LNG, lng);
+		  values.put(EarthquakeProvider.KEY_LINK, quake.getLink());
+		  values.put(EarthquakeProvider.KEY_MAGNITUDE, quake.getMagnitude());
 
-      double lat = quake.getLocation().getLatitude();
-      double lng = quake.getLocation().getLongitude();
-      values.put(EarthquakeProvider.KEY_LOCATION_LAT, lat);
-      values.put(EarthquakeProvider.KEY_LOCATION_LNG, lng);
-      values.put(EarthquakeProvider.KEY_LINK, quake.getLink());
-      values.put(EarthquakeProvider.KEY_MAGNITUDE, quake.getMagnitude());
-
-      cr.insert(EarthquakeProvider.CONTENT_URI, values);
-    }
-    query.close();
+		  cr.insert(EarthquakeProvider.CONTENT_URI, values);
+		}
+		query.close();
+	} catch (Exception e) {
+		Log.e(TAG, "addNewQuake err:"+e);
+	}
   }
 
   public void refreshEarthquakes() {

@@ -1,5 +1,6 @@
 package com.paad.earthquake;
 
+import android.R.color;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -10,8 +11,14 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
@@ -39,7 +46,7 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 			mEarthquakeAdapter = new EarthquakeAdapter();
 			setListAdapter(mEarthquakeAdapter);
 		} catch (Exception e) {
-
+			Log.e(TAG, "onCreate err:"+e);
 		}
 	}
 
@@ -62,13 +69,14 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 		setListAdapter(mEarthquakeAdapter);
 
 		getLoaderManager().initLoader(0, null, this);
-
-		Thread t = new Thread(new Runnable() {
+		refreshEarthquakes();
+/*		Thread t = new Thread(new Runnable() {
 			public void run() {
 				refreshEarthquakes();
 			}
 		});
 		t.start();
+*/
 	}
 
 	private static final String TAG = "EarthquakeListFragment";
@@ -86,19 +94,31 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 	}
 
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = new String[] { EarthquakeProvider.KEY_ID, EarthquakeProvider.KEY_SUMMARY };
-
-		Earthquake earthquakeActivity = (Earthquake) getActivity();
-		String where = EarthquakeProvider.KEY_MAGNITUDE + " > " + earthquakeActivity.minimumMagnitude;
-
-		CursorLoader loader = new CursorLoader(getActivity(), EarthquakeProvider.CONTENT_URI, projection, where, null,
-				null);
-
-		return loader;
+		try{
+		String[] projection = { EarthquakeProvider.KEY_ID,EarthquakeProvider.KEY_DATE, 
+		        EarthquakeProvider.KEY_SUMMARY, };
+		    String where = EarthquakeProvider.KEY_SUMMARY
+		                     + " LIKE \"%" + mQuery + "%\"";
+		    String[] whereArgs = null;
+		    String sortOrder = EarthquakeProvider.KEY_SUMMARY + " COLLATE LOCALIZED ASC";
+		    
+		    // Create the new Cursor loader.
+		    return new CursorLoader(getActivity(), EarthquakeProvider.CONTENT_URI,
+		            projection, where, whereArgs,
+		            sortOrder);
+		}catch(Exception e){
+			Log.e(TAG, "onCreateLoader err:"+e);
+		}
+		return null;
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		mEarthquakeAdapter.swapCursor(cursor);
+		try{
+			mEarthquakeAdapter.swapCursor(cursor);
+		}catch(Exception e)
+		{
+			Log.e(TAG, "onLoadFinished err"+e);
+		}
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {
@@ -120,5 +140,33 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 			Log.e(TAG, "query was empty in send Query");
 		}
 	}
+	ListView rootView;
+	LinearLayout mHeader; 
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		try {
+			rootView = (ListView)inflater.
+					inflate(R.layout.listfragment_view,container,false);
+			rootView.setBackgroundColor(color.holo_blue_light);
+			rootView.setFooterDividersEnabled(true);
+			View hv = inflater.inflate(R.layout.header_view,null);
+			mHeader = (LinearLayout)hv.findViewById(R.id.header_view);
+			rootView.addHeaderView(mHeader);
+			View fv = inflater.inflate(R.layout.footer_views,null);
+			rootView.addFooterView(fv);
+			rootView.setFooterDividersEnabled(true);
+			setListAdapter(mEarthquakeAdapter);
+		} catch (Exception e) {
+			Log.e(TAG, "onCreateView err:"+e);
+		}		
+		
+		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		refreshEarthquakes();
+	}
 }

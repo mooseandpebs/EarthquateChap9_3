@@ -10,15 +10,28 @@ public class Quake {
   private Location location;
   private double magnitude;
   private String link;
-
+  private int id;
+  
+  public int getId() {return id;}
   public Date getDate() { return date; }
   public String getDetails() { return details; }
   public Location getLocation() { return location; }
   public double getMagnitude() { return magnitude; }
   public String getLink() { return link; }
 
+
+  public Quake(int _id, Date _d, String _det) {
+	    id = _id;
+	    date = _d;
+	    details = _det;
+	    location = null;
+	    magnitude = 0;
+	    link = "";
+	  }
+
   public Quake(Date _d, String _det, Location _loc, double _mag, String _link) {
-    date = _d;
+    id = -1;
+	date = _d;
     details = _det;
     location = _loc;
     magnitude = _mag;

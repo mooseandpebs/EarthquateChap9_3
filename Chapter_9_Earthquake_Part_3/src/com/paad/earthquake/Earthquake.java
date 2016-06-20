@@ -66,7 +66,6 @@ public class Earthquake extends Activity implements
 	protected void onNewIntent(Intent intent) {
 		try {
 			super.onNewIntent(intent);
-			Log.e(TAG, "got new intent");
 			setIntent(intent);
 			handleIntent(intent);
 		} catch (Exception e) {
@@ -163,15 +162,15 @@ public class Earthquake extends Activity implements
 			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				String searchQuery = intent.getStringExtra(SearchManager.QUERY);
 				//EarthquakeSearchResultsFragment frag;
-				EarthquakeListFragment frag;
-				if (getFragmentManager().findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT) == null) {
+				EarthquakeListFragment frag
+					= (EarthquakeListFragment) getFragmentManager()
+						.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT);
+				if (frag == null) {
 					frag = new EarthquakeListFragment();
-				} else {
-					frag = (EarthquakeListFragment) getFragmentManager()
-							.findFragmentByTag(EARTHQUAKESEARCHRESULTSFRAGMENT);
 				}
 				frag.setQuery(searchQuery);
-				getFragmentManager().beginTransaction().replace(R.id.container, frag)
+				getFragmentManager().beginTransaction().replace(R.id.container, frag,
+						EARTHQUAKESEARCHRESULTSFRAGMENT)
 						.addToBackStack(EARTHQUAKESEARCHRESULTSFRAGMENT).commit();
 
 			}

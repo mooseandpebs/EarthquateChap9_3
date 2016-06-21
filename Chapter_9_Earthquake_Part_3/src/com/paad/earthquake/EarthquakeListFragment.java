@@ -5,14 +5,18 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +24,8 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class EarthquakeListFragment extends ListFragment 
+	implements LoaderManager.LoaderCallbacks<Cursor>
 {
 
 	EarthquakeAdapter mEarthquakeAdapter;
@@ -96,7 +101,9 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		try{
 		String[] projection = { EarthquakeProvider.KEY_ID,EarthquakeProvider.KEY_DATE, 
-		        EarthquakeProvider.KEY_SUMMARY, };
+		        EarthquakeProvider.KEY_SUMMARY
+		        ,EarthquakeProvider.KEY_LOCATION_LAT
+		        ,EarthquakeProvider.KEY_LOCATION_LNG };
 		    String where = EarthquakeProvider.KEY_SUMMARY
 		                     + " LIKE \"%" + mQuery + "%\"";
 		    String[] whereArgs = null;
@@ -168,5 +175,18 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
 	public void onResume() {
 		super.onResume();
 		refreshEarthquakes();
+	}
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		if(v instanceof RelativeLayout)
+		{
+			Object o = mEarthquakeAdapter.getItem(position);
+			if(o instanceof Quake)
+			{
+				Quake q = (Quake)o;
+				Location loc = q.getLocation();
+			}
+		}
 	}
 }

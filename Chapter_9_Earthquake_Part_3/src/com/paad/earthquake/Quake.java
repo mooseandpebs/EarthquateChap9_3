@@ -20,11 +20,11 @@ public class Quake {
   public String getLink() { return link; }
 
 
-  public Quake(int _id, Date _d, String _det) {
+  public Quake(int _id, Date _d, String _det,Location _loc) {
 	    id = _id;
 	    date = _d;
 	    details = _det;
-	    location = null;
+	    location = _loc;
 	    magnitude = 0;
 	    link = "";
 	  }

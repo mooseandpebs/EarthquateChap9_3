@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,6 +101,9 @@ public class EarthquakeAdapter extends BaseAdapter {
             int db = 0;
             int idx = 0;
             int id =0;
+            String lat;
+            String lon;
+            Location loc = new Location("");
             mQuakeMap.clear();
 			while(_Cursor.moveToNext())
 			{
@@ -110,8 +115,12 @@ public class EarthquakeAdapter extends BaseAdapter {
 					d = mDateFormat.parse(dateStr);
 					db++;
 					info = _Cursor.getString(2);
+					lat = _Cursor.getString(3);
+					lon = _Cursor.getString(4);
+					loc.setLatitude(Double.parseDouble(lat));
+					loc.setLongitude(Double.parseDouble(lon));
 					db++;
-					q = new Quake(idx,d,info);
+					q = new Quake(idx,d,info,loc);
 					db++;
 					mQuakeMap.put(key, q);
 					key++;;					

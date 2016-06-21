@@ -1,6 +1,7 @@
 package com.paad.earthquake;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import com.google.android.maps.*;
+
 
 public class Earthquake extends Activity implements 
 	EarthquakeListFragment.Callback {
@@ -178,9 +181,16 @@ public class Earthquake extends Activity implements
 			Log.e(TAG, "parseIntent" + e);
 		}
 	}
+	private static final String MAPFRAGMNET="MapFragment";
+	
 	public void positionToMapCalled(Quake _Quakedata)
 	{
-		
+		try{
+			View v = getLayoutInflater().inflate(R.layout.earthquake_map, null);
+			setContentView(v);
+		}catch(Exception e)
+		{
+			Log.e(TAG, "positionToMapCalled err:"+e);
+		}
 	}
-
 }

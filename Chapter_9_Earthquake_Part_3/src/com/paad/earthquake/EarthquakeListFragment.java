@@ -186,6 +186,7 @@ public class EarthquakeListFragment extends ListFragment
 			{
 				Quake q = (Quake)o;
 				Location loc = q.getLocation();
+				mCallback.positionToMapCalled(q);
 			}
 		}
 	}
